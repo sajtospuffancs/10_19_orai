@@ -45,7 +45,6 @@ namespace orai_2
             string osszesszoveg = "";
             List<string> kedvenclista = new List<string>();
             string[] adatok = new string[4];
-
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 osszesszoveg = File.ReadAllText(openFileDialog.FileName);
@@ -61,29 +60,30 @@ namespace orai_2
                     no_radiobutton.Checked = true;
                 }
                 else { }
-                if (kedvenc_listbox.ToString().Contains(adatok[3]))
+                string[] lista = adatok[4].Split(',');
+                for (int i = 0; i < lista.Length; i++)
                 {
-                    kedvenc_listbox.SelectedItem = adatok[3];
+                    if (kedvenc_listbox.Items.Contains(lista[i]))
+                    {
+                    }
+                    else
+                    {
+                        kedvenc_listbox.Items.Add(lista[i]);
+                    }
                 }
-                else
-                {
-                    kedvenc_listbox.Items.Add(adatok[3]);
-                    kedvenc_listbox.SelectedItem = adatok[3];
-                }
-
+                kedvenc_listbox.SelectedItem = adatok[3];
             }
-            
         }
 
         private void Mentes(string nev, string szulido, string nem, string kedvenchobbi)
         {
-            string tartalom = string.Format("{0};{1};{2};{3};", nev, szulido, nem, kedvenchobbi);
             string listatartalom = "";
             foreach(string szoveg in kedvenc_listbox.Items)
             {
-                listatartalom += szoveg + "\n";
+                listatartalom += szoveg + ",";
             }
             saveFileDialog.FileName = "";
+            string tartalom = string.Format("{0};{1};{2};{3};{4}", nev, szulido, nem, kedvenchobbi,listatartalom);
             var eredmeny = saveFileDialog.ShowDialog(this);
             if (eredmeny == DialogResult.OK)
             {
