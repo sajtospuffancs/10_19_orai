@@ -43,16 +43,46 @@ namespace orai_2
         {
             openFileDialog.FileName = "";
             string osszesszoveg = "";
+            List<string> kedvenclista = new List<string>();
+            string[] adatok = new string[4];
+
             if (openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 osszesszoveg = File.ReadAllText(openFileDialog.FileName);
+                adatok = osszesszoveg.Split(';');
+                nev_textbox.Text = adatok[0];
+                szuldat_textbox.Text = adatok[1];
+                if (adatok[2] == "férfi")
+                {
+                    ferfi_radiobutton.Checked = true;
+                }
+                else if (adatok[2] == "nő")
+                {
+                    no_radiobutton.Checked = true;
+                }
+                else { }
+                if (kedvenc_listbox.ToString().Contains(adatok[3]))
+                {
+                    kedvenc_listbox.SelectedItem = adatok[3];
+                }
+                else
+                {
+                    kedvenc_listbox.Items.Add(adatok[3]);
+                    kedvenc_listbox.SelectedItem = adatok[3];
+                }
+
             }
             
         }
 
         private void Mentes(string nev, string szulido, string nem, string kedvenchobbi)
         {
-            string tartalom = string.Format("{0}\n{1}\n{2}\n{3}", nev, szulido, nem, kedvenchobbi);
+            string tartalom = string.Format("{0};{1};{2};{3};", nev, szulido, nem, kedvenchobbi);
+            string listatartalom = "";
+            foreach(string szoveg in kedvenc_listbox.Items)
+            {
+                listatartalom += szoveg + "\n";
+            }
             saveFileDialog.FileName = "";
             var eredmeny = saveFileDialog.ShowDialog(this);
             if (eredmeny == DialogResult.OK)
